@@ -1,0 +1,21 @@
+services:
+  web:
+    image: nginx
+    volumes:
+      - ./client_cert.pem:/etc/nginx/client_certs/cert.pem
+      - ./nginx_cert.pem:/etc/nginx/certs/cert.pem
+      - ./nginx_key.pem:/etc/nginx/certs/key.pem
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 8080:80
+      - 443:443
+
+  proxy:
+    image: envoyproxy/envoy:dev-f97242a970eb6637b2aa8bba916f589672a1d190
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
+      - ./client_cert.pem:/certs/clientcert.pem
+      - ./client_key.pem:/certs/clientkey.pem
+    ports:
+      - 9901:9901
+      - 10000:10000
